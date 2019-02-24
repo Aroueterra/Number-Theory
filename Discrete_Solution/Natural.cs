@@ -12,7 +12,7 @@ namespace Discrete_Solution
     /// </summary>
     /// <remarks> 
     /// @author: August Bryan N. Florese
-    /// @since: 2019-02-24
+    /// @since: 2019-02-25
     /// </remarks> 
     public class Natural
     {
