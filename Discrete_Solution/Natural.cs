@@ -51,6 +51,8 @@ namespace Discrete_Solution
             catch (ArgumentException e)
             {
                 Console.WriteLine(e);
+                //Console.ReadKey();
+                throw;
             }
         }
 
@@ -74,8 +76,19 @@ namespace Discrete_Solution
         /// </summary> 
         public Natural Subtract(Natural value)
         {
-            this.value -= value.value;
-            return this;
+            try
+            {
+                if ((this.value - value.value) < 0)
+                    throw new ArgumentException("Natural numbers cannot be negative");
+                else
+                    this.value -= value.value;
+                return this;
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         ///<summary>
@@ -94,19 +107,19 @@ namespace Discrete_Solution
         {
             try
             {
-                if (this.value == 0 || value.value == 0)
+                if (this.value <= 0 || value.value <= 0)
                     throw new ArgumentException("You cannot divide by zero!");
                 else
+                {
                     this.value /= value.value;
-                return this;
+                    return this;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                this.value = 0;
-                return this;
+                throw;
             }
-
         }
 
         ///<summary>
@@ -142,14 +155,16 @@ namespace Discrete_Solution
             {
                 if (value.value <= 0 || this.value <= 0)
                     throw new ArgumentException("You cannot divide by zero!");
-                divided[0] = new Natural(this.value / value.value);
-                divided[1] = new Natural(this.value % value.value);
+                BigInteger quo = this.value / value.value;
+                BigInteger mod = this.value % value.value;
+                divided[0] = new Natural(quo);
+                divided[1] = new Natural(mod);
                 return divided;
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e);
-                return divided;
+                throw;
             }
 
         }
@@ -213,7 +228,7 @@ namespace Discrete_Solution
         public Natural ModPow(Natural exponent, Natural mod)
         {
             BigInteger exp = exponent.value, m = mod.value;
-            this.value = Pow(exp).value %= m;
+            this.value = this.Pow(exp).Modulo(mod).value;
             return this;
         }
 
@@ -253,6 +268,14 @@ namespace Discrete_Solution
         public Natural Gcd(Natural value)
         {
             BigInteger x = this.value, y = value.value, temp = 0;
+            if (x <= 0 || y <= 0)
+                throw new ArgumentException("You cannot divide by zero!");
+            else if (y < x)
+            {
+                temp = x;
+                x = y;
+                y = temp;
+            }
             while (y != 0)
             {
                 temp = x % y;
@@ -268,8 +291,9 @@ namespace Discrete_Solution
         /// </summary> 
         public Natural Lcm(Natural value)
         {
-            BigInteger z = this.Gcd(value).value;
-            this.value = (this.value / z) * value.value;
+            Natural temp = new Natural(this.value);
+            BigInteger gcd = temp.Gcd(value).value;
+            this.value = (this.value / gcd) * value.value;
             return this;
         }
 
@@ -316,7 +340,7 @@ namespace Discrete_Solution
         }
 
         ///<summary>
-        ///Returns a String representation of the value of this instance given a certain base value for conversion.
+        ///Returns a String representation of the value of this instance converted  based on a given base value.
         /// </summary>
         /// <remarks>
         /// Your base must be greater than 1 or less than 63.
@@ -335,7 +359,7 @@ namespace Discrete_Solution
                 string builder = string.Empty;
                 do
                 {
-                    builder = map[(long)this.value % num.Value] + builder;
+                    builder = map[(Int64)this.value % num.Value] + builder;
                     value = value / num.Value;
                 }
                 while (value > 0);
@@ -352,19 +376,21 @@ namespace Discrete_Solution
         ///<summary>
         ///Returns the number of relatively prime numbers with respect to the value of this instance.
         /// </summary>
-        //public  Integer countRelativelyPrimes()
-        //{
-        //    int result = 1;
-        //    BigInteger n = this.value;
-        //    result = n * 1 - (1 /2);
-        //    for (int i = 2; i < n; i++)
-        //        if (this.Gcd(n) == 1)
-        //            result++;
-        //    return result;
-        //}
+        public Int32 countRelativelyPrimes()
+        {
+            Double n = (Double)this.value;
+            Double p = 1;
+            var distinct_factors = this.DistinctPrimeFactors();
+            foreach(var element in distinct_factors)
+            {
+                p *= 1-(1/(Double)element.value);
+            }
+            n *= p;
+            return (Int32)n;
+        }
 
         ///<summary>
-        ///Returns the number of relatively prime numbers with respect to the value of this instance.
+        ///Returns a boolean check true or false, whether the gcd of two values is equal to 1.
         /// </summary>
         public Boolean IsRelativelyPrimeTo(Natural value)
         {
@@ -372,49 +398,43 @@ namespace Discrete_Solution
         }
 
         ///<summary>
-        ///Returns the number of relatively prime numbers with respect to the value of this instance.
+        ///This returns a string formatted representation of the division algorithm 
         /// </summary>
         public String DivisionAlgorithm(Natural value)
         {
-            BigInteger x = this.value, y = value.value, q = x / y, r = x % y;
-            return string.Format("{0} = {1} * {2} + {3}", x, y, q, r);
+            Natural X = new Natural(this.value); Natural X2 = new Natural(this.value);
+            Natural Y = new Natural(value.value);
+            if(X.value <= 0 || Y.value <=0)
+                throw new ArgumentException("Invalid arguments detected!");
+            BigInteger q = X.Divide(value).value, r = X2.Modulo(Y).value;
+            return string.Format("{0} = {1} * {2} + {3}", X.value, Y.value, q, r);
         }
 
         ///<summary>
-        ///Returns the number of relatively prime numbers with respect to the value of this instance.
+        ///Returns a list of prime factors with respect to the value of this instance.
         /// </summary>
         public List<Natural> PrimeFactorize()
         {
-            BigInteger val = this.value;
-            BigInteger maxFactor = 0;
+            if (this.value < 0)
+                throw new ArgumentException("This.value contains an invalid value");
             var factors = new List<Natural>();
-            BigInteger squared = (BigInteger)Math.Sqrt((double)val);
-            while (val > 1)
+            BigInteger value = this.value;
+            Double squared = Math.Sqrt((double)value);
+            while (value % 2 == 0)
             {
-                BigInteger nextFactor = 2;
-
-                if (val % nextFactor > 0)
+                factors.Add(new Natural(2));
+                value = value / 2;
+            }
+            for (int i = 3; i <= squared; i = i + 2)
+            {
+                while (value % i == 0)
                 {
-                    nextFactor = 3;
-                    do
-                    {
-                        if (val % nextFactor == 0)
-                        {
-                            break;
-                        }
-
-                        nextFactor += 2;
-                    } while (!(nextFactor > squared));
-                }
-
-                val /= nextFactor;
-                var n = new Natural(nextFactor);
-                factors.Add(n);
-                if (nextFactor > maxFactor)
-                {
-                    maxFactor = nextFactor;
+                    factors.Add(new Natural(i));
+                    value = value / i;
                 }
             }
+            if (value > 2)
+                factors.Add(new Natural(value));
             return factors;
         }
 
@@ -423,28 +443,52 @@ namespace Discrete_Solution
         /// </summary>
         public List<Natural> DistinctPrimeFactors()
         {
-
+            if (this.value < 0)
+                throw new ArgumentException("This.value contains an invalid value");
             var list = this.PrimeFactorize();
             List<Natural> unique = new List<Natural>();
             unique = list.GroupBy(elem => elem.value).Select(group => group.First()).ToList();
-
             return unique;
         }
 
         ///<summary>
         ///Returns the int32 representation of the value of this instance
         /// </summary>
-        public Integer GetIntValue()
+        public Int32 GetIntValue()
         {
-            return (Int32)(this.value);
+            var str = this.value.ToString();
+            if (str.Length <= 9 || this.value <= 2147483647)
+                return (Int32)this.value;
+            else
+                throw new ArgumentException("The value is too large to be contained in the Int32 format.");
+        }
+
+        ///<summary>
+        ///Returns the int32 representation of the value of this instance as an array of integers
+        /// </summary>
+        public int[] GetArray(BigInteger num)
+        {
+            String str = num.ToString();
+            int[] arr = new int[str.Length];
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] = str.ElementAt(i) - '0';
+            return arr;
         }
 
         ///<summary>
         ///Returns the int64 representation of the value of this instance.
         /// </summary>
-        public long GetLongValue()
+        public Int64 GetLongValue()
         {
             return (Int64)(this.value);
+        }
+
+        ///<summary>
+        ///Returns the int64 representation of the value of this instance.
+        /// </summary>
+        public BigInteger GetBigValue()
+        {
+            return (this.value);
         }
     }
 }
