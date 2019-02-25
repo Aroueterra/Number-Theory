@@ -78,7 +78,7 @@ The project utilized the following import directives:
 
         {
 
-//method actions
+            //method actions
 
         }
 
@@ -89,22 +89,6 @@ We opted for the unit test method of testing due to the east in handling multipl
 The type of var is dependent on the type of the object assigned to it, visible under intellisense.
 
 For the sake of readability, Natural class methods are bulleted with the symbol **±** , while Discrete\_Test methods will start with **φ (phi).**
-
- ///\&lt;summary\&gt;
-
-        ///Returns a String representation of the...
-
-        /// \&lt;/summary\&gt;
-
-        /// \&lt;remarks\&gt;
-
-        /// Your base must be greater than 1 or less than 63...
-
-        /// The table of conversion are the numbers 0-9, A-Z and a-z (62 varia...
-
-        /// Could be replaced with a dictionary key value loo…
-
-        /// \&lt;/remarks\&gt;
 
 In-line documentation was omitted for the discussion section. Refer to the source code. We used XML in-line markup to auto-generate a documentation file in the backend. (Found in the debug folder)
 
@@ -122,9 +106,9 @@ In order to save print material and design space, multiple act and assertion sec
 
 Method Signatures are outlined in **Bold** to distinguish them.
 
-**public class Natural**
+    **public class Natural**
 
- {
+    {
 
        private BigInteger value;
 
@@ -168,7 +152,7 @@ Method Signatures are outlined in **Bold** to distinguish them.
 
         }
 
-}
+    }
 
 The Natural class has a default constructor and a constructor taking one parameter of type BigInteger. Due to the nature of natural numbers, its private member value must contain numbers falling in the domain ![](data:image/*;base64,R0lGODlhDgAOAIAAAP///wAAACH5BAMAAAAALAAAAAAOAA4AAAIlRH6gmLYKAzTSxYnovbXaZ3XYInpfkm1gA26mqb0TKc8alY5AAQA7) = {x | x \&gt;= 0}; throwing an exception otherwise.
 
