@@ -14,7 +14,7 @@ Course Adviser
 
 
 
-
+Visit the wiki once its fully updated for a cleaner look!
 
 # Introduction
 
