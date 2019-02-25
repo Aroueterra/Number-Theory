@@ -19,6 +19,8 @@ Overhaul will take place over the month...
 
 Visit the wiki once its fully updated for a cleaner look!
 
+For now, download the docx in the files section. These should have the output screenshots.
+
 # Introduction
 
 Discrete mathematics is essential in studying the core concepts of programming especially for Computer Science students. Why? It will help you with the algorithms, complexity and computability. The understanding of set theory, probability, and combinations will allow you to analyze algorithms. You will be able to successfully identify parameters and limitations of your algorithms and can realize how complex a problem or a solution is.
