@@ -13,6 +13,9 @@ Course Adviser
 
 
 
+Readme under construction! 
+
+Overhaul will take place over the month...
 
 Visit the wiki once its fully updated for a cleaner look!
 
