@@ -44,21 +44,21 @@ Using the Visual Studio Test Suite, Unit Testing each method is made simpler.
 
 The project utilized the following import directives:
 
-using System;
+    using System;
 
-using System.Linq;
+    using System.Linq;
 
-using System.Text;
+    using System.Text;
 
-using System.Numerics;
+    using System.Numerics;
 
-using Discrete\_Solution;
+    using Discrete\_Solution;
 
-using System.Threading.Tasks;
+    using System.Threading.Tasks;
 
-using System.Collections.Generic;
+    using System.Collections.Generic;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 **Numerics** : Imports the BigInteger class. **TestTools**. **UnitTestng** : References the test suite.
 
