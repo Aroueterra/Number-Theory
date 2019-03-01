@@ -3,7 +3,7 @@ using System.Numerics;
 using Discrete_Solution;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTestProject1
+namespace DiscreteTestProject
 {
     [TestClass]
     public class Discrete_Test
@@ -11,13 +11,13 @@ namespace UnitTestProject1
         [TestMethod, Description("Addition test must meet expected output")]
         public void Addition_Test()
         {
-            var natural1 = new Natural(50);
-            var natural2 = new Natural(50);
-            int expected = 100;
+            var natural1 = new Natural(Int32.MaxValue);
+            var natural2 = new Natural(Int64.MaxValue);
+            bool expected = true;
             var actual = natural1.Add(natural2);
-            Assert.AreEqual(expected, actual.GetIntValue());
+            Assert.AreEqual(expected, (actual.GetBigValue()>Int64.MaxValue));
 
-            Console.WriteLine(actual.GetIntValue());
+            Console.WriteLine("The Big Integer sum is: "+ actual.GetBigValue());
         }
         [TestMethod, Description("Test all arithmetic through complex method chaining!")]
         public void Arithmetic_Test()
@@ -26,11 +26,11 @@ namespace UnitTestProject1
             var natural2 = new Natural(2);
             var natural3 = new Natural(7);
             int expected = 50;
-            //((((10+2)-2)*10)/2) == 50
-            var actual = natural1.Add(natural2).Subtract(natural2).Multiply(natural1).Divide(natural2);
             BigInteger expected2 = 20248916;
-            //7^50 / 5^50 == 20248916 w/o decimal
+
+            var actual = natural1.Add(natural2).Subtract(natural2).Multiply(natural1).Divide(natural2);
             var actual2 = natural3.Pow(actual.GetBigValue()).Divide(new Natural(new Natural(5).Pow(50).GetBigValue()));
+
             Assert.AreEqual(expected, actual.GetIntValue());
             Assert.AreEqual(expected2, actual2.GetBigValue());
 
@@ -64,7 +64,15 @@ namespace UnitTestProject1
         [ExpectedException(typeof(ArgumentException))]
         public void Domain_Exception_Test()
         {
-            var negative_natural = new Natural(-5);
+            try
+            {
+                var negative_natural = new Natural(-5);
+            }
+            catch(ArgumentException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [TestMethod, Description("Test for default initialization")]
@@ -190,7 +198,7 @@ namespace UnitTestProject1
                 Console.Write(element + " ");
             }
             int expected = 616;
-            var phi = hardphi.countRelativelyPrimes();
+            var phi = hardphi.CountRelativelyPrimes();
             Console.Write("\nφPhi of {0} is: " + phi, hardphi);
             Assert.AreEqual(expected, phi);
         }

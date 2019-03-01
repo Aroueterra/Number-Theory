@@ -12,7 +12,8 @@ namespace Discrete_Solution
     /// </summary>
     /// <remarks> 
     /// @author: August Bryan N. Florese
-    /// @since: 2019-02-25
+    /// @started: 2019-02-25  
+    /// @concluded: 2019-02-27
     /// </remarks> 
     public class Natural
     {
@@ -51,7 +52,6 @@ namespace Discrete_Solution
             catch (ArgumentException e)
             {
                 Console.WriteLine(e);
-                //Console.ReadKey();
                 throw;
             }
         }
@@ -233,7 +233,7 @@ namespace Discrete_Solution
         }
 
         ///<summary>
-        ///returns the next prime number greater than the value of this instance
+        ///Returns the next prime number greater than the value of this instance
         /// </summary> 
         public Natural NextProbablePrime()
         {
@@ -289,6 +289,9 @@ namespace Discrete_Solution
         ///<summary>
         ///Returns the least common multiple between the value of this instance and the value of another instance.
         /// </summary> 
+        /// <remarks>
+        /// Calls the result of GCD
+        /// </remarks>
         public Natural Lcm(Natural value)
         {
             Natural temp = new Natural(this.value);
@@ -327,7 +330,7 @@ namespace Discrete_Solution
             catch (ArgumentException e)
             {
                 Console.WriteLine(e);
-                return false;
+                throw;
             }
         }
 
@@ -347,11 +350,11 @@ namespace Discrete_Solution
         /// The table of conversion are the numbers 0-9, A-Z and a-z (62 variables in total).
         /// Could be replaced with a dictionary key value lookup or some linq/regular expression implementation.
         /// </remarks>
-        public String ToString(Integer num)
+        public String ToString(Int32 num)
         {
             try
             {
-                if (num.Value <= 1 || num.Value >= 63)
+                if (num <= 1 || num >= 63)
                     throw new ArgumentException("Number should be greater than or equal to 2, and less than or equal to 62");
                 char[] map = new char[] { '0','1','2','3','4','5','6','7','8','9',
                                          'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
@@ -359,8 +362,8 @@ namespace Discrete_Solution
                 string builder = string.Empty;
                 do
                 {
-                    builder = map[(Int64)this.value % num.Value] + builder;
-                    value = value / num.Value;
+                    builder = map[(Int64)this.value % num] + builder;
+                    value = value / num;
                 }
                 while (value > 0);
                 return builder;
@@ -376,7 +379,10 @@ namespace Discrete_Solution
         ///<summary>
         ///Returns the number of relatively prime numbers with respect to the value of this instance.
         /// </summary>
-        public Int32 countRelativelyPrimes()
+        /// <remarks>
+        /// Implements Euler's Totient Algorithm
+        /// </remarks>
+        public Int32 CountRelativelyPrimes()
         {
             Double n = (Double)this.value;
             Double p = 1;
@@ -392,6 +398,9 @@ namespace Discrete_Solution
         ///<summary>
         ///Returns a boolean check true or false, whether the gcd of two values is equal to 1.
         /// </summary>
+        /// <returns>
+        /// @True: 1
+        /// </returns>
         public Boolean IsRelativelyPrimeTo(Natural value)
         {
             return (this.Gcd(value).value == 1) ? true : false;
@@ -413,6 +422,9 @@ namespace Discrete_Solution
         ///<summary>
         ///Returns a list of prime factors with respect to the value of this instance.
         /// </summary>
+        /// <remarks>
+        /// Implements direct search algorithm
+        /// </remarks>
         public List<Natural> PrimeFactorize()
         {
             if (this.value < 0)
@@ -484,7 +496,7 @@ namespace Discrete_Solution
         }
 
         ///<summary>
-        ///Returns the int64 representation of the value of this instance.
+        ///Returns the BigInteger representation of the value of this instance.
         /// </summary>
         public BigInteger GetBigValue()
         {
