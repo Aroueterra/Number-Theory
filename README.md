@@ -11,15 +11,15 @@ Submitted to:
 Course Adviser
 
 
+*Commit pending, current version is not the updated version.
 
+*Readme under construction! 
 
-Readme under construction! 
+*Overhaul will take place over the month...
 
-Overhaul will take place over the month...
+*Visit the wiki once its fully updated for a cleaner look!
 
-Visit the wiki once its fully updated for a cleaner look!
-
-For now, download the docx in the files section. These should have the output screenshots.
+*For now, download the docx in the files/releases section (update pending, not final). These should have the output screenshots.
 
 # Introduction
 
