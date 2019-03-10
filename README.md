@@ -11,8 +11,6 @@ Submitted to:
 Course Adviser
 
 
-*Commit pending, current version is not the updated version.
-
 *Readme under construction! 
 
 *Overhaul will take place over the month...
