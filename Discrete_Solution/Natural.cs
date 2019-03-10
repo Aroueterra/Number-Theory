@@ -201,25 +201,40 @@ namespace Discrete_Solution
         ///<summary>
         ///Returns the value of the expression this raised to a BigInteger instance, power.
         /// </summary> 
+        /// <returns>
+        /// A negative power is permitted as not all
+        /// </returns>
         public Natural Pow(BigInteger power)
         {
-            BigInteger var = 1;
-            if (power > 0)
+            try
             {
-                for (int i = 1; i <= power; ++i)
+                BigInteger var = 1;
+                if (power > 0)
                 {
-                    var *= this.value;
+                    for (int i = 1; i <= power; ++i)
+                    {
+                        var *= this.value;
+                    }
                 }
+                else if (power < 0)
+                {
+                    for (int i = -1; i >= power; --i)
+                    {
+                        var /= this.value;
+                    }
+                }
+                if (var < 0)
+                {
+                    throw new ArgumentException("Output should be within the domain of natural numbers.");
+                }
+                this.value = var;
+                return this;
             }
-            else if (power < 0)
+            catch(ArgumentException e)
             {
-                for (int i = -1; i >= power; --i)
-                {
-                    var /= this.value;
-                }
+                Console.WriteLine(e);
+                throw;
             }
-            this.value = var;
-            return this;
         }
 
         ///<summary>
@@ -258,32 +273,43 @@ namespace Discrete_Solution
             catch (ArgumentException e)
             {
                 Console.WriteLine(e);
-                return this;
+                throw;
             }
         }
 
         ///<summary>
         ///Returns the greatest common denominator between the value of this instance and the value of another instance
         /// </summary> 
+        /// <remarks>
+        /// X cannot be negative but can be zero; whereas y cannot be negative or zero
+        /// </remarks>
         public Natural Gcd(Natural value)
         {
             BigInteger x = this.value, y = value.value, temp = 0;
-            if (x <= 0 || y <= 0)
-                throw new ArgumentException("You cannot divide by zero!");
-            else if (y < x)
+            try
             {
-                temp = x;
-                x = y;
-                y = temp;
+                if (x < 0 || y <= 0)
+                    throw new ArgumentException("An invalid argument was detected.");
+                else if (y < x)
+                {
+                    temp = x;
+                    x = y;
+                    y = temp;
+                }
+                while (y != 0)
+                {
+                    temp = x % y;
+                    x = y;
+                    y = temp;
+                }
+                this.value = x;
+                return this;
             }
-            while (y != 0)
+            catch(ArgumentException e)
             {
-                temp = x % y;
-                x = y;
-                y = temp;
+                Console.WriteLine(e);
+                throw;
             }
-            this.value = x;
-            return this;
         }
 
         ///<summary>
@@ -301,24 +327,30 @@ namespace Discrete_Solution
         }
 
         ///<summary>
-        ///Checks if the value of this instance is a prime number, return true if yes, otherwise false.
+        ///Checks if the value of this instance is a prime number
         /// </summary>
+        /// <remarks>
+        /// An extension method was incorporated to handle numbers outside the limit of Int64, however this implementation is not the fastest.
+        /// While the method is optimized for long and int numbers, the solution also accepts even larger numbers at the cost of performance
+        /// </remarks>
+        /// <returns>
+        /// True : the value is prime
+        /// False : the value is composite or non-natural
+        /// </returns>
         public Boolean IsPrime()
         {
 
             BigInteger num = this.value;
             try
             {
-                if (this.value < 0)
-                    throw new ArgumentException("Number should be within the domain of natural numbers.");
-                if (this.value == 1)
+                if (this.value <= 1)
                     return false;
                 if (this.value == 2 || this.value == 3)
                     return true;
                 if (this.value % 2 == 0 || this.value % 3 == 0)
                     return false;
-                int i;
-                for (i = 2; i <= num / 2; i++)
+                BigInteger limit = (this.Sqrt())+1;
+                for (int i = 3; i <= limit; i+=2)
                 {
                     if (num % i == 0)
                     {
@@ -332,6 +364,34 @@ namespace Discrete_Solution
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public BigInteger Sqrt()
+        {
+            BigInteger n = this.value;
+            if (n == 0) return 0;
+            if (n > 0)
+            {
+                int length = Convert.ToInt32(Math.Ceiling(BigInteger.Log(n, 2)));
+                BigInteger root = BigInteger.One << (length / 2);
+
+                while (!isRooted(n, root))
+                {
+                    root += n / root;
+                    root /= 2;
+                }
+
+                return root;
+            }
+            throw new ArithmeticException("NDE");
+        }
+
+        private static Boolean isRooted(BigInteger n, BigInteger root)
+        {
+            BigInteger lowerBound = root * root;
+            BigInteger upperBound = (root + 1) * (root + 1);
+
+            return n >= lowerBound && n <= lowerBound + root + root;
         }
 
         ///<summary>
@@ -358,7 +418,7 @@ namespace Discrete_Solution
                     throw new ArgumentException("Number should be greater than or equal to 2, and less than or equal to 62");
                 char[] map = new char[] { '0','1','2','3','4','5','6','7','8','9',
                                          'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-                                         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x'};
+                                         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x', 'y', 'z'};
                 string builder = string.Empty;
                 do
                 {
@@ -372,7 +432,7 @@ namespace Discrete_Solution
             catch (ArgumentException e)
             {
                 Console.WriteLine(e);
-                return null;
+                throw;
             }
         }
 

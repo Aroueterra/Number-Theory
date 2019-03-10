@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using Discrete_Solution;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,19 +23,19 @@ namespace DiscreteTestProject
         [TestMethod, Description("Test all arithmetic through complex method chaining!")]
         public void Arithmetic_Test()
         {
-            var natural1 = new Natural(10);
-            var natural2 = new Natural(2);
+            var natural1 = new Natural(5);//10);
+            //var natural2 = new Natural(-2);//);
             var natural3 = new Natural(7);
-            int expected = 50;
-            BigInteger expected2 = 20248916;
+            int expected = 0;
+            BigInteger expected2 = 0;
 
-            var actual = natural1.Add(natural2).Subtract(natural2).Multiply(natural1).Divide(natural2);
-            var actual2 = natural3.Pow(actual.GetBigValue()).Divide(new Natural(new Natural(5).Pow(50).GetBigValue()));
+            //var actual = natural1.Add(natural2).Subtract(natural2).Multiply(natural1).Divide(natural2);
+            var actual2 = natural3.Pow(-2);//.Divide(new Natural(new Natural(5).Pow(50).GetBigValue()));
 
-            Assert.AreEqual(expected, actual.GetIntValue());
+            //Assert.AreEqual(expected, actual.GetIntValue());
             Assert.AreEqual(expected2, actual2.GetBigValue());
 
-            Console.WriteLine("((((10+2)-2)*10)/2) == 50 matches our result:  " + actual.GetBigValue());
+            //Console.WriteLine("((((10+2)-2)*10)/2) == 50 matches our result:  " + actual.GetBigValue());
             Console.WriteLine("7^50 / 5^50 == 20248916 w/o decimal matches our result:  " + actual2.GetBigValue());
         }
 
@@ -90,6 +91,38 @@ namespace DiscreteTestProject
             Console.WriteLine("The value of default initialization is: " + default_natural.GetIntValue());
             Console.WriteLine("The value of a valid initialization is: " + valid_natural.GetIntValue());
         }
+
+        [TestMethod, Description("Test for default initialization")]
+        public void Mod_Test()
+        {
+            var val = new Natural(52);
+            var exponent = new Natural(7);
+            var modulo = new Natural(3);
+            var expected = BigInteger.ModPow(52, 7, 3);
+
+            var actual = val.ModPow(exponent, modulo);
+            Assert.AreEqual(expected, actual.GetBigValue());
+
+            Console.WriteLine("The value of expected {0} vs actual: " + actual.GetBigValue(), expected);
+
+        }
+
+        [TestMethod, Description("Test for default initialization")]
+        public void Prime_Test()
+        {
+            var val = new Natural(199);
+            var exponent = new Natural(7);
+            var modulo = new Natural(3);
+            var expected = true;
+
+            var actual = val.IsPrime();
+            Assert.AreEqual(expected, actual);
+
+            Console.WriteLine("The value of expected {0} vs actual: " + actual, expected);
+
+        }
+
+
 
         [TestMethod, Description("Various methods of comparison")]
         public void Comparison_Test()
@@ -206,7 +239,7 @@ namespace DiscreteTestProject
         [TestMethod, Description("Basic primality")]
         public void NumberTheory2_Basic_Test()
         {
-            int n = 19;
+            BigInteger n = 9223372036854775807;
             var natural = new Natural(n);
             bool expected = true;
             var actual = natural.NextProbablePrime();
@@ -216,8 +249,8 @@ namespace DiscreteTestProject
                 natural = new Natural(n + i);
                 actual = natural.NextProbablePrime();
                 Assert.AreEqual(expected, actual.IsPrime());
-                Console.WriteLine("The next probable prime after {0} is: " + actual.GetIntValue(), n + i);
-                n += 6;
+                Console.WriteLine("The next probable prime after {0} is: " + actual.GetBigValue(), n + i);
+                n += 7;
             }
         }
         [TestMethod, Description("Division Algorithm")]
